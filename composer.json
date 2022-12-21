@@ -1,0 +1,22 @@
+{
+	"name": "stefna/moya-di",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Andreas Sundqvist",
+			"email": "andreas@stefna.is"
+		}
+	],
+	"minimum-stability": "dev",
+	"prefer-stable": true,
+	"require": {
+		"php": "^8.2",
+		"psr/container": "^2.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"Moya\\DependencyInjection\\": "src/"
+		}
+	}
+}
