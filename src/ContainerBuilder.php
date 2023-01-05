@@ -20,17 +20,17 @@ final class ContainerBuilder
 	public function build(): ContainerInterface
 	{
 		$defaultContainer = new Container($this->definitionSources);
-
-		if ($this->containers) {
-			$a = new AggregateContainer();
-			foreach ($this->containers as [$container, $priority]) {
-				$a->addContainer($container, $priority);
-			}
-			$a->addContainer($defaultContainer, Priority::Normal);
-			$defaultContainer = $a;
+		if (!$this->containers) {
+			return $defaultContainer;
 		}
 
-		return $defaultContainer;
+		$aggregateContainer = new AggregateContainer();
+		foreach ($this->containers as [$container, $priority]) {
+			$aggregateContainer->addContainer($container, $priority);
+		}
+		$aggregateContainer->addContainer($defaultContainer, Priority::Normal);
+
+		return $aggregateContainer;
 	}
 
 	public function addContainer(

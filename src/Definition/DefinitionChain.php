@@ -16,8 +16,8 @@ final class DefinitionChain implements DefinitionSource
 	public function getDefinitions(): array
 	{
 		$definitions = [];
-		foreach ($this->definitions as $def) {
-			$definitions[] = $def->getDefinitions();
+		foreach ($this->definitions as $source) {
+			$definitions[] = $source->getDefinitions();
 		}
 
 		return array_merge(...$definitions);
