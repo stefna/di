@@ -28,4 +28,19 @@ final class AggregateContainerTest extends TestCase
 		$aggregateContainer->addContainer($container);
 		$aggregateContainer->addContainer($container);
 	}
+
+	public function testFastPathHasCheck(): void
+	{
+		$aggregateContainer = new AggregateContainer();
+		$container = new Container(new DefinitionArray([
+			\DateTimeImmutable::class => fn () => new \DateTimeImmutable(),
+		]));
+		$aggregateContainer->addContainer($container);
+
+		$aggregateContainer->has(\DateTimeImmutable::class);
+
+		$this->assertInstanceOf(\DateTimeImmutable::class, $aggregateContainer->get(\DateTimeImmutable::class));
+
+		$this->assertTrue($aggregateContainer->has(\DateTimeImmutable::class));
+	}
 }

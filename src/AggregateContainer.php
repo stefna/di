@@ -14,6 +14,8 @@ final class AggregateContainer implements ContainerInterface
 	private array $ids = [];
 	/** @var array<string, mixed>  */
 	private array $cache = [];
+	/** @var array<string, callable>  */
+	private array $factoryCache = [];
 	/** @var float[] */
 	private array $priorities = [];
 
@@ -50,15 +52,13 @@ final class AggregateContainer implements ContainerInterface
 			return $this->cache[$id];
 		}
 
-		foreach ($this->priorities as $priority) {
-			foreach ($this->containers[$priority] as $container) {
-				if ($container->has($id)) {
-					return $this->cache[$id] = $container->get($id);
-				}
-			}
+		if (!$this->has($id)) {
+			throw NotFoundException::withIdentifier($id);
 		}
 
-		throw NotFoundException::withIdentifier($id);
+		$factory = $this->factoryCache[$id];
+		unset($this->factoryCache[$id]);
+		return $this->cache[$id] = $factory();
 	}
 
 	/**
@@ -69,10 +69,14 @@ final class AggregateContainer implements ContainerInterface
 		if (isset($this->cache[$id])) {
 			return true;
 		}
+		if (isset($this->factoryCache[$id])) {
+			return true;
+		}
 
 		foreach ($this->priorities as $priority) {
 			foreach ($this->containers[$priority] as $container) {
 				if ($container->has($id)) {
+					$this->factoryCache[$id] = static fn () => $container->get($id);
 					return true;
 				}
 			}
