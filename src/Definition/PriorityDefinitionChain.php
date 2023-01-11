@@ -35,7 +35,7 @@ final class PriorityDefinitionChain implements DefinitionSource
 		$this->definitions[$priorityKey][] = $definitionSource;
 
 		$this->priorities = array_keys($this->definitions);
-		usort($this->priorities, static fn ($a, $b) => $b <=> $a);
+		usort($this->priorities, static fn (float $a, float $b) => $b <=> $a);
 	}
 
 	public function haveDefinition(DefinitionSource $definitionSource): bool

@@ -35,7 +35,7 @@ final class AggregateContainer implements ContainerInterface
 		$this->containers[$priorityKey][] = $container;
 
 		$this->priorities = array_keys($this->containers);
-		usort($this->priorities, static fn ($a, $b) => $b <=> $a);
+		usort($this->priorities, static fn (float $a, float $b) => $b <=> $a);
 	}
 
 	public function haveContainer(ContainerInterface $container): bool
