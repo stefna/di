@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Definition;
+namespace Stefna\DependencyInjection\Tests\Definition;
 
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Definition\DefinitionChain;
-use Moya\DependencyInjection\Definition\DefinitionFile;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\DefinitionChain;
+use Stefna\DependencyInjection\Definition\DefinitionFile;
 use PHPUnit\Framework\TestCase;
 
 final class DefinitionChainTest extends TestCase

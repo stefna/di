@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Helper;
+namespace Stefna\DependencyInjection\Helper;
 
 use Psr\Container\ContainerInterface;
 

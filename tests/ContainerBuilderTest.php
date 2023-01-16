@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests;
+namespace Stefna\DependencyInjection\Tests;
 
-use Moya\DependencyInjection\AggregateContainer;
-use Moya\DependencyInjection\Container;
-use Moya\DependencyInjection\ContainerBuilder;
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Priority;
+use Stefna\DependencyInjection\AggregateContainer;
+use Stefna\DependencyInjection\Container;
+use Stefna\DependencyInjection\ContainerBuilder;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Priority;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\NotFoundExceptionInterface;
 

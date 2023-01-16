@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Definition;
+namespace Stefna\DependencyInjection\Definition;
 
-use Moya\DependencyInjection\Exception\DuplicateEntryException;
-use Moya\DependencyInjection\Priority;
-use Moya\DependencyInjection\PriorityAware;
+use Stefna\DependencyInjection\Exception\DuplicateEntryException;
+use Stefna\DependencyInjection\Priority;
+use Stefna\DependencyInjection\PriorityAware;
 
 final class PriorityDefinitionChain implements DefinitionSource
 {

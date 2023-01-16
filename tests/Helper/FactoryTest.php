@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Helper;
+namespace Stefna\DependencyInjection\Tests\Helper;
 
-use Moya\DependencyInjection\Container;
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Exception\BadFactoryException;
-use Moya\DependencyInjection\Helper\Factory;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestBadFactory;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestFactory;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestFactoryWithClassName;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestInterface;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestWithArgs;
-use Moya\DependencyInjection\Tests\Helper\Stubs\TestWithoutArgs;
+use Stefna\DependencyInjection\Container;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Exception\BadFactoryException;
+use Stefna\DependencyInjection\Helper\Factory;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestBadFactory;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestFactory;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestFactoryWithClassName;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestInterface;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithArgs;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithoutArgs;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 

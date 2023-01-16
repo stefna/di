@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Helper;
+namespace Stefna\DependencyInjection\Helper;
 
-use Moya\DependencyInjection\Exception\BadFactoryException;
+use Stefna\DependencyInjection\Exception\BadFactoryException;
 use Psr\Container\ContainerInterface;
 
 final class Factory

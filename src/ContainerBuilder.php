@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection;
+namespace Stefna\DependencyInjection;
 
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Definition\DefinitionFile;
-use Moya\DependencyInjection\Definition\DefinitionSource;
-use Moya\DependencyInjection\Definition\PriorityDefinitionChain;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\DefinitionFile;
+use Stefna\DependencyInjection\Definition\DefinitionSource;
+use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
 use Psr\Container\ContainerInterface;
 
 final class ContainerBuilder

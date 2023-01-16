@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Definition;
+namespace Stefna\DependencyInjection\Tests\Definition;
 
-use Moya\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
 use PHPUnit\Framework\TestCase;
 
 final class DefinitionArrayTest extends TestCase

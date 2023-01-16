@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Definition;
+namespace Stefna\DependencyInjection\Tests\Definition;
 
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Definition\PriorityDefinitionChain;
-use Moya\DependencyInjection\Exception\DuplicateEntryException;
-use Moya\DependencyInjection\Priority;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
+use Stefna\DependencyInjection\Exception\DuplicateEntryException;
+use Stefna\DependencyInjection\Priority;
 use PHPUnit\Framework\TestCase;
 
 final class PriorityDefinitionChainTest extends TestCase

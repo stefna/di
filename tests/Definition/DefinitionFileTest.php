@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Definition;
+namespace Stefna\DependencyInjection\Tests\Definition;
 
-use Moya\DependencyInjection\Definition\DefinitionFile;
+use Stefna\DependencyInjection\Definition\DefinitionFile;
 use PHPUnit\Framework\TestCase;
 
 final class DefinitionFileTest extends TestCase

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests;
+namespace Stefna\DependencyInjection\Tests;
 
-use Moya\DependencyInjection\AggregateContainer;
-use Moya\DependencyInjection\Container;
-use Moya\DependencyInjection\Definition\DefinitionArray;
-use Moya\DependencyInjection\Exception\DuplicateEntryException;
+use Stefna\DependencyInjection\AggregateContainer;
+use Stefna\DependencyInjection\Container;
+use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Exception\DuplicateEntryException;
 use PHPUnit\Framework\TestCase;
 
 final class AggregateContainerTest extends TestCase

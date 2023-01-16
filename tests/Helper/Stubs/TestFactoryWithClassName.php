@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Tests\Helper\Stubs;
+namespace Stefna\DependencyInjection\Tests\Helper\Stubs;
 
-use Moya\DependencyInjection\Exception\BadFactoryException;
+use Stefna\DependencyInjection\Exception\BadFactoryException;
 use Psr\Container\ContainerInterface;
 
 final class TestFactoryWithClassName

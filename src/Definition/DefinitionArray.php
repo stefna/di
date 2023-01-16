@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection\Definition;
+namespace Stefna\DependencyInjection\Definition;
 
 class DefinitionArray implements DefinitionSource
 {

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace Moya\DependencyInjection;
+namespace Stefna\DependencyInjection;
 
-use Moya\DependencyInjection\Exception\DuplicateEntryException;
-use Moya\DependencyInjection\Exception\NotFoundException;
+use Stefna\DependencyInjection\Exception\DuplicateEntryException;
+use Stefna\DependencyInjection\Exception\NotFoundException;
 use Psr\Container\ContainerInterface;
 
 final class AggregateContainer implements ContainerInterface
