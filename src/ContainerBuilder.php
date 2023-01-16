@@ -43,7 +43,7 @@ final class ContainerBuilder
 	}
 
 	/**
-	 * @param DefinitionSource|string|array<string, callable> $definition
+	 * @param DefinitionSource|string|array<string, callable(ContainerInterface, string): mixed> $definition
 	 */
 	public function addDefinition(
 		DefinitionSource|string|array $definition,

@@ -2,6 +2,7 @@
 
 namespace Stefna\DependencyInjection\Tests\Definition;
 
+use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\Definition\DefinitionFile;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,7 @@ final class DefinitionFileTest extends TestCase
 
 		$factory = $def->getDefinition(\ArrayObject::class);
 		$this->assertNotNull($factory);
-		$this->assertInstanceOf(\ArrayObject::class, $factory());
+		$this->assertInstanceOf(\ArrayObject::class, $factory(new Container($def), ''));
 	}
 
 	public function testInvalidFile(): void

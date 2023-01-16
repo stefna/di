@@ -2,6 +2,7 @@
 
 namespace Stefna\DependencyInjection\Tests\Definition;
 
+use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
 use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
 use Stefna\DependencyInjection\Exception\DuplicateEntryException;
@@ -23,7 +24,7 @@ final class PriorityDefinitionChainTest extends TestCase
 
 		$factory = $chain->getDefinition(\DateTimeInterface::class);
 		$this->assertNotNull($factory);
-		$obj = $factory();
+		$obj = $factory(new Container($chain), '');
 
 		$this->assertSame($expectedObj, $obj);
 	}
@@ -41,7 +42,7 @@ final class PriorityDefinitionChainTest extends TestCase
 
 		$factory = $chain->getDefinition(\DateTimeInterface::class);
 		$this->assertNotNull($factory);
-		$obj = $factory();
+		$obj = $factory(new Container($chain), '');
 
 		$this->assertSame($expectedObj, $obj);
 	}

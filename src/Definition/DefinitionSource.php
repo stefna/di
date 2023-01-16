@@ -2,11 +2,13 @@
 
 namespace Stefna\DependencyInjection\Definition;
 
+use Psr\Container\ContainerInterface;
+
 interface DefinitionSource
 {
 	/**
 	 * @param string $name
-	 * @return null|callable
+	 * @return null|callable(ContainerInterface, string): mixed
 	 */
 	public function getDefinition(string $name): ?callable;
 

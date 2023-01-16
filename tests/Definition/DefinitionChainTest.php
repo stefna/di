@@ -2,6 +2,7 @@
 
 namespace Stefna\DependencyInjection\Tests\Definition;
 
+use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
 use Stefna\DependencyInjection\Definition\DefinitionChain;
 use Stefna\DependencyInjection\Definition\DefinitionFile;
@@ -20,7 +21,7 @@ final class DefinitionChainTest extends TestCase
 
 		$dateFactory = $def->getDefinition(\DateTimeInterface::class);
 		$this->assertNotNull($dateFactory);
-		$this->assertInstanceOf(\DateTimeImmutable::class, $dateFactory());
+		$this->assertInstanceOf(\DateTimeImmutable::class, $dateFactory(new Container($def), ''));
 
 		foreach ($def->getDefinitions() as $defName => $factory) {
 			$this->assertIsString($defName);
