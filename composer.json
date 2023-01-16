@@ -1,5 +1,6 @@
 {
-	"name": "stefna/moya-di",
+	"name": "stefna/di",
+	"description": "Lightweight dependency injection container",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
@@ -14,9 +15,29 @@
 		"php": "^8.2",
 		"psr/container": "^2.0"
 	},
+	"require-dev": {
+		"squizlabs/php_codesniffer": "dev-master",
+		"stefna/codestyle": "^1.12",
+		"phpstan/phpstan": "^1.8",
+		"bnf/phpstan-psr-container": "^1.0",
+		"phpunit/phpunit": "^9.5.25",
+		"phpstan/phpstan-phpunit": "^1.1",
+		"tomasvotruba/type-coverage": "^0.0.7",
+		"phpstan/extension-installer": "^1.2"
+	},
 	"autoload": {
 		"psr-4": {
-			"Moya\\DependencyInjection\\": "src/"
+			"Stefna\\DependencyInjection\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Stefna\\DependencyInjection\\Tests\\": "tests/"
+		}
+	},
+	"config": {
+		"allow-plugins": {
+			"phpstan/extension-installer": true
 		}
 	}
 }
