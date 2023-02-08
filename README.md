@@ -1,5 +1,9 @@
 # Dependency Injection
 
+[![Build Status](https://github.com/stefna/di/actions/workflows/continuous-integration.yml/badge.svg?branch=main)](https://github.com/stefna/di/actions/workflows/continuous-integration.yml)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/stefna/di.svg)](https://packagist.org/packages/stefna/di)
+[![Software License](https://img.shields.io/github/license/stefna/di.svg)](LICENSE)
+
 This package is a lightweight dependency injection container that is framework-agnostic.
 
 ## Requirements
