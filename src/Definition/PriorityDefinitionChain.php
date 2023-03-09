@@ -46,7 +46,7 @@ final class PriorityDefinitionChain implements DefinitionSource
 	public function getDefinition(string $name): ?callable
 	{
 		foreach ($this->priorities as $priority) {
-			foreach ($this->definitions[$priority] as $definition) {
+			foreach (array_reverse($this->definitions[$priority]) as $definition) {
 				$factory = $definition->getDefinition($name);
 				if ($factory) {
 					return $factory;
@@ -61,7 +61,7 @@ final class PriorityDefinitionChain implements DefinitionSource
 	{
 		$definitions = [];
 		foreach (array_reverse($this->priorities) as $priority) {
-			foreach ($this->definitions[$priority] as $def) {
+			foreach (array_reverse($this->definitions[$priority]) as $def) {
 				$definitions[] = $def->getDefinitions();
 			}
 		}

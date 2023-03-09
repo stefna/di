@@ -6,6 +6,7 @@ use Stefna\DependencyInjection\AggregateContainer;
 use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\ContainerBuilder;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\DefinitionChain;
 use Stefna\DependencyInjection\Priority;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\NotFoundExceptionInterface;
@@ -96,5 +97,26 @@ final class ContainerBuilderTest extends TestCase
 
 		$this->assertFalse($container->has('not-found'));
 		$container->get('not-found-2');
+	}
+
+
+	public function testDefinitionOrder(): void
+	{
+		$def1 = new DefinitionArray(['test1' => fn() => 1, 'test2' => fn() => 2, 'test3' => fn() => 4]);
+		$def2 = new DefinitionArray(['test1' => fn() => 3, 'test4' => fn() => 12]);
+
+		$builder = new ContainerBuilder();
+		$builder->addDefinition($def1);
+		$builder->addDefinition($def2);
+		$builder->addDefinition([
+			'test2' => fn () => 7,
+		]);
+
+		$container = $builder->build();
+
+		$this->assertSame(3, $container->get('test1'));
+		$this->assertSame(7, $container->get('test2'));
+		$this->assertSame(4, $container->get('test3'));
+		$this->assertSame(12, $container->get('test4'));
 	}
 }
