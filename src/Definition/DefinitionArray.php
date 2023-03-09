@@ -30,7 +30,6 @@ class DefinitionArray implements DefinitionSource
 	 */
 	public function addDefinitions(array $definitions): void
 	{
-		// @phpstan-ignore-next-line - I can't guarantee that everyone follows typehint
 		if (array_is_list($definitions)) {
 			throw new \BadMethodCallException('Definitions must be indexed by entry name');
 		}
