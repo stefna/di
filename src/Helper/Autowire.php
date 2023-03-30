@@ -52,6 +52,9 @@ final class Autowire
 			}
 
 			if (!$paramInstance && $type->isBuiltin()) {
+				if ($param->isOptional()) {
+					continue;
+				}
 				throw new \BadMethodCallException('Can\'t autowire native types');
 			}
 
