@@ -14,10 +14,10 @@ final class TestResolveAttribute implements ResolverAttribute
 		private string $type,
 	) {}
 
-	public function resolve(string $type, ContainerInterface $container)
+	public function resolve(string $type, ContainerInterface $container): mixed
 	{
 		$date = new \DateTimeImmutable();
-		return match($this->type) {
+		return match ($this->type) {
 			'args' => new TestWithArgs($date),
 			'default' => new TestWithDefaultArgs(),
 			default => null,

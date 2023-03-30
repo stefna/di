@@ -12,6 +12,7 @@ use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute1;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute2;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute3;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute4;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithDefaultArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithoutArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithScalarArgs;
@@ -47,7 +48,7 @@ final class AutowireTest extends TestCase
 		$this->assertInstanceOf(TestWithDefaultArgs::class, $object);
 	}
 
-	public function testAutowireWithDefaultArgumentOverride(): void
+	public function testAutoWireWithDefaultArgumentOverride(): void
 	{
 		$autowire = Autowire::cls();
 
@@ -124,6 +125,15 @@ final class AutowireTest extends TestCase
 		$this->assertInstanceOf(TestWithAttribute3::class, $object);
 		$this->assertInstanceOf(TestResolveAndConfigure::class, $object->test);
 		$this->assertSame('42', $object->test->value);
+	}
+
+	public function testAutoWireWithResolveScalarValue(): void
+	{
+		$autowire = Autowire::cls();
+
+		$object = $autowire($this->container(), TestWithAttribute4::class);
+		$this->assertInstanceOf(TestWithAttribute4::class, $object);
+		$this->assertSame('42', $object->test);
 	}
 
 	/**

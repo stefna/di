@@ -3,6 +3,7 @@
 namespace Stefna\DependencyInjection\Helper;
 
 use Psr\Container\ContainerInterface;
+use ReflectionAttribute;
 use Stefna\DependencyInjection\Helper\Attribute\ConfigureAttribute;
 use Stefna\DependencyInjection\Helper\Attribute\ResolverAttribute;
 
@@ -26,7 +27,7 @@ final class Autowire
 	 * @param class-string<T> $className
 	 * @return T
 	 */
-	public function __invoke(ContainerInterface $c, string $className): object
+	public function __invoke(ContainerInterface $container, string $className): object
 	{
 		$reflection = new \ReflectionClass($this->className ?? $className);
 		$constructor = $reflection->getConstructor();
@@ -37,41 +38,41 @@ final class Autowire
 			if (!$type instanceof \ReflectionNamedType) {
 				throw new \BadMethodCallException('Can\'t autowire complex types');
 			}
-			if ($type->isBuiltin()) {
-				throw new \BadMethodCallException('Can\'t autowire native types');
-			}
 
 			/** @var class-string $typeName */
 			$typeName = $type->getName();
-			$containerHasType = $c->has($typeName);
-			if (!$containerHasType && !$param->isOptional()) {
-				throw new \BadMethodCallException(sprintf('Can\'t find "%s" in container', $type->getName()));
-			}
-
+			$resolvableAttrs = $param->getAttributes(ResolverAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
 			$paramInstance = null;
-			if ($param->getAttributes()) {
-				foreach ($param->getAttributes() as $reflectionAttribute) {
-					$implements = class_implements($reflectionAttribute->getName());
-					if (in_array(ResolverAttribute::class, $implements, true)) {
-						/** @var ResolverAttribute $attr */
-						$attr = $reflectionAttribute->newInstance();
-						$paramInstance = $attr->resolve($typeName, $c);
-					}
-					if (in_array(ConfigureAttribute::class, $implements, true)) {
-						if (!$paramInstance) {
-							/** @var object $paramInstance */
-							$paramInstance = $c->get($typeName);
-						}
-						/** @var ConfigureAttribute $attr */
-						$attr = $reflectionAttribute->newInstance();
-						$attr->configure($paramInstance, $c);
-					}
+			if ($resolvableAttrs) {
+				foreach ($resolvableAttrs as $reflectionAttribute) {
+					/** @var ResolverAttribute $attr */
+					$attr = $reflectionAttribute->newInstance();
+					$paramInstance = $attr->resolve($typeName, $container);
 				}
 			}
 
-			if ($containerHasType) {
-				$args[] = $paramInstance ?? $c->get($type->getName());
+			if (!$paramInstance && $type->isBuiltin()) {
+				throw new \BadMethodCallException('Can\'t autowire native types');
 			}
+
+			if (!$paramInstance && !$container->has($typeName)) {
+				if ($param->isOptional()) {
+					continue;
+				}
+				throw new \BadMethodCallException(sprintf('Can\'t find "%s" in container', $typeName));
+			}
+			/** @var object $paramInstance */
+			$paramInstance = $paramInstance ?? $container->get($typeName);
+
+			if (is_object($paramInstance)) {
+				$configureAttributes = $param->getAttributes(ConfigureAttribute::class, ReflectionAttribute::IS_INSTANCEOF);
+				foreach ($configureAttributes as $reflectionAttribute) {
+					$attr = $reflectionAttribute->newInstance();
+					$attr->configure($paramInstance, $container);
+				}
+			}
+
+			$args[] = $paramInstance;
 		}
 
 		// @phpstan-ignore-next-line - don't feel like figure out how to make phpstan happy
