@@ -3,6 +3,8 @@
 namespace Stefna\DependencyInjection\Helper;
 
 use Psr\Container\ContainerInterface;
+use Stefna\DependencyInjection\Helper\Attribute\ConfigureAttribute;
+use Stefna\DependencyInjection\Helper\Attribute\ResolverAttribute;
 
 final class Autowire
 {
@@ -38,13 +40,37 @@ final class Autowire
 			if ($type->isBuiltin()) {
 				throw new \BadMethodCallException('Can\'t autowire native types');
 			}
-			$containerHasType = $c->has($type->getName());
+
+			/** @var class-string $typeName */
+			$typeName = $type->getName();
+			$containerHasType = $c->has($typeName);
 			if (!$containerHasType && !$param->isOptional()) {
 				throw new \BadMethodCallException(sprintf('Can\'t find "%s" in container', $type->getName()));
 			}
 
+			$paramInstance = null;
+			if ($param->getAttributes()) {
+				foreach ($param->getAttributes() as $reflectionAttribute) {
+					$implements = class_implements($reflectionAttribute->getName());
+					if (in_array(ResolverAttribute::class, $implements, true)) {
+						/** @var ResolverAttribute $attr */
+						$attr = $reflectionAttribute->newInstance();
+						$paramInstance = $attr->resolve($typeName, $c);
+					}
+					if (in_array(ConfigureAttribute::class, $implements, true)) {
+						if (!$paramInstance) {
+							/** @var object $paramInstance */
+							$paramInstance = $c->get($typeName);
+						}
+						/** @var ConfigureAttribute $attr */
+						$attr = $reflectionAttribute->newInstance();
+						$attr->configure($paramInstance, $c);
+					}
+				}
+			}
+
 			if ($containerHasType) {
-				$args[] = $c->get($type->getName());
+				$args[] = $paramInstance ?? $c->get($type->getName());
 			}
 		}
 
