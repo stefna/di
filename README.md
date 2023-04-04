@@ -90,6 +90,77 @@ $container = $builder->build();
 $clock = $container->get(ClockInterface::class);
 ```
 
+#### Attributes
+
+You can augment the auto-wiring with attributes. 
+
+The auto-wire helper defaults to only fetch objects from the container.
+
+We support 2 attribute interfaces
+* `ResolverAttribute` can be used to resolve complex values from container
+* `ConfigureAttribute` can be used to reconfigure an object before injecting into class
+
+##### `ResolverAttribute`
+
+Can be useful when you want to resolve a scalar value from something like 
+a config storage.
+
+```php
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
+final class ConfigValue implements ResolverAttribute
+{
+	public function __construct(private readonly string $key) {}
+
+	public function resolve(string $type, ContainerInterface $container): mixed
+	{
+		$config = $container->get(Config::class);
+		return $config->get($this->key);
+	}
+}
+
+final class Test
+{
+	public function __construct(
+		#[ConfigValue('site.config.value')]
+		private readonly string $configValue,
+	) {}
+}
+```
+
+#### `ConfigureAttribute`
+
+Can be useful when you want to reconfigure something that being injected
+for example setting a custom log channel for this class.
+
+```php
+#[\Attribute(\Attribute::TARGET_PARAMETER)]
+final class LogChannel implements ConfigureAttribute
+{
+	public function __construct(private readonly string $channel) {}
+
+	public function configure(object $object, ContainerInterface $container): object
+	{
+		if ($object instanceof LoggerInterface && class_exists(ChannelWrapper::class)) {
+			return new ChannelWrapper($object, $this->channel);
+		}
+		if ($container->has(LoggerManager::class)) {
+			return $container->get(LoggerManager::class)->createLogger($this->channel);
+		}
+		
+		// don't know how to add channel just return the incoming logger
+		return $object;
+	}
+}
+
+final class Test
+{
+	public function __construct(
+		#[LogChannel('test-channel')]
+		private readonly LoggerInterface $logger,
+	) {}
+}
+```
+
 ### Factories
 
 Everything in the definition is in practice a factory.
