@@ -41,6 +41,48 @@ $container = $builder->build();
 $clock = $container->get(ClockInterface::class);
 ```
 
+#### Bulk configure definitions
+
+We provide 2 definition sources that can be used to bulk define stuff.
+
+First you have `FilterDefinition` that just allows you to provide any arbitrary filter that will be matched against
+the requested class. And if it matches it will be given the definition.
+
+Example:
+
+```php
+<?php
+
+use Stefna\DependencyInjection\Definition\FilterDefinition;
+use Stefna\DependencyInjection\Helper\Autowire;
+
+// this will auto-wire all class that ends with Controller
+$definition = new FilterDefinition(
+	fn (string $className) => str_ends_with('Controller'),
+	fn (string $className) => Autowires::cls($className)
+);
+```
+
+We also provide a `NamespaceFilterDefinition` that makes it easier to bulk define everything in a specific namespace.
+
+The `NamespaceFilterDefinition` just extends `FilterDefinition` and makes it easier to use with namespaces.
+
+Example:
+```php
+<?php
+
+use Stefna\DependencyInjection\Definition\NamespaceFilterDefinition;
+
+// this will auto-wire all class that are in App\Controller namespace
+$controllerDefinitions = NamespaceFilterDefinition::autoWire('App\\Controller\\');
+// this will just do a simple new $className() on all classes in App\RequestInput namespace
+$requestInputDefinitions = NamespaceFilterDefinition::create('App\\RequestInput\\');
+```
+
+If your going to use this to provide auto-wiring to lots of classes I would recommend extending `FilterDefintion` and
+implement `PriorityAware` on the definition and return `Priority::Low` so you easily can override the "default"
+definition
+
 ### Use with other container implementations
 
 ```php
