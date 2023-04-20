@@ -30,4 +30,10 @@ final class DefinitionChainTest extends TestCase
 
 		$this->assertCount(3, $def->getDefinitions());
 	}
+
+	public function testNotFound(): void
+	{
+		$chain = new DefinitionChain();
+		$this->assertNull($chain->getDefinition(\DateTimeInterface::class));
+	}
 }

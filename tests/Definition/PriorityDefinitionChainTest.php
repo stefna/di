@@ -8,6 +8,7 @@ use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
 use Stefna\DependencyInjection\Exception\DuplicateEntryException;
 use Stefna\DependencyInjection\Priority;
 use PHPUnit\Framework\TestCase;
+use Stefna\DependencyInjection\PriorityAware;
 
 final class PriorityDefinitionChainTest extends TestCase
 {
@@ -87,5 +88,36 @@ final class PriorityDefinitionChainTest extends TestCase
 	{
 		$chain = new PriorityDefinitionChain();
 		$this->assertNull($chain->getDefinition(\DateTimeInterface::class));
+	}
+
+	public function testPriorityAwareDefinitionSource(): void
+	{
+		$expectedObj = new \DateTimeImmutable();
+		$chain = new PriorityDefinitionChain();
+		$chain->addDefinition(new DefinitionArray([
+			\DateTimeInterface::class => fn () => new \DateTime(),
+			\ArrayObject::class => fn () => new \ArrayObject(),
+		]));
+		$chain->addDefinition(new class ($expectedObj) extends DefinitionArray implements PriorityAware {
+			public function __construct(\DateTimeImmutable $expectedObj)
+			{
+				parent::__construct([
+					\DateTimeInterface::class => fn () => $expectedObj,
+				]);
+			}
+
+			public function getPriority(): Priority|int
+			{
+				return Priority::High;
+			}
+		});
+
+		$defs = $chain->getDefinitions();
+		$this->assertCount(2, $defs);
+
+		$factory = $defs[\DateTimeInterface::class];
+		$this->assertIsCallable($factory);
+		$this->assertSame($expectedObj, $factory());
+
 	}
 }
