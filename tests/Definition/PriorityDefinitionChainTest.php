@@ -118,6 +118,5 @@ final class PriorityDefinitionChainTest extends TestCase
 		$factory = $defs[\DateTimeInterface::class];
 		$this->assertIsCallable($factory);
 		$this->assertSame($expectedObj, $factory());
-
 	}
 }
