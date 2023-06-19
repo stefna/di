@@ -67,7 +67,7 @@ final class AutowireTest extends TestCase
 		$autowire = Autowire::cls();
 
 		$this->expectException(\BadMethodCallException::class);
-		$this->expectExceptionMessage('Can\'t find "DateTimeImmutable" in container');
+		$this->expectExceptionMessage('Can\'t resolve argument "$date" of type "DateTimeImmutable"');
 
 		$autowire($this->container(), TestWithArgs::class);
 	}
@@ -77,7 +77,7 @@ final class AutowireTest extends TestCase
 		$autowire = Autowire::cls();
 
 		$this->expectException(\BadMethodCallException::class);
-		$this->expectExceptionMessage('Can\'t autowire native types');
+		$this->expectExceptionMessage('Can\'t resolve argument "$arg1" of type "bool"');
 
 		$autowire($this->container(), TestWithScalarArgs::class);
 	}
@@ -87,7 +87,7 @@ final class AutowireTest extends TestCase
 		$autowire = Autowire::cls();
 
 		$this->expectException(\BadMethodCallException::class);
-		$this->expectExceptionMessage('Can\'t autowire complex types');
+		$this->expectExceptionMessage('Can\'t auto-wire complex types');
 
 		$autowire($this->container(), TestWithUnionType::class);
 	}

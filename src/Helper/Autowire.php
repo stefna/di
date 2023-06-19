@@ -4,6 +4,7 @@ namespace Stefna\DependencyInjection\Helper;
 
 use Psr\Container\ContainerInterface;
 use ReflectionAttribute;
+use Stefna\DependencyInjection\Exception\NotResolvedException;
 use Stefna\DependencyInjection\Helper\Attribute\ConfigureAttribute;
 use Stefna\DependencyInjection\Helper\Attribute\ResolverAttribute;
 
@@ -36,7 +37,7 @@ final class Autowire
 		foreach ($params as $param) {
 			$type = $param->getType();
 			if (!$type instanceof \ReflectionNamedType) {
-				throw new \BadMethodCallException('Can\'t autowire complex types');
+				throw new NotResolvedException('Can\'t auto-wire complex types');
 			}
 
 			/** @var class-string $typeName */
@@ -55,14 +56,22 @@ final class Autowire
 				if ($param->isOptional()) {
 					continue;
 				}
-				throw new \BadMethodCallException('Can\'t autowire native types');
+				throw new NotResolvedException(sprintf(
+					'Can\'t resolve argument "$%s" of type "%s"',
+					$param->getName(),
+					(string)$param->getType()?->__toString(),
+				));
 			}
 
 			if (!$paramInstance && !$container->has($typeName)) {
 				if ($param->isOptional()) {
 					continue;
 				}
-				throw new \BadMethodCallException(sprintf('Can\'t find "%s" in container', $typeName));
+				throw new NotResolvedException(sprintf(
+					'Can\'t resolve argument "$%s" of type "%s"',
+					$param->getName(),
+					(string)$param->getType()?->__toString(),
+				));
 			}
 			/** @var object $paramInstance */
 			$paramInstance = $paramInstance ?? $container->get($typeName);
