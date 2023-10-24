@@ -4,6 +4,7 @@ namespace Stefna\DependencyInjection\Tests\Definition;
 
 use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
+use Stefna\DependencyInjection\Definition\PriorityDefinitionArray;
 use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
 use Stefna\DependencyInjection\Exception\DuplicateEntryException;
 use Stefna\DependencyInjection\Priority;
@@ -98,19 +99,9 @@ final class PriorityDefinitionChainTest extends TestCase
 			\DateTimeInterface::class => fn () => new \DateTime(),
 			\ArrayObject::class => fn () => new \ArrayObject(),
 		]));
-		$chain->addDefinition(new class ($expectedObj) extends DefinitionArray implements PriorityAware {
-			public function __construct(\DateTimeImmutable $expectedObj)
-			{
-				parent::__construct([
-					\DateTimeInterface::class => fn () => $expectedObj,
-				]);
-			}
-
-			public function getPriority(): Priority|int
-			{
-				return Priority::High;
-			}
-		});
+		$chain->addDefinition(new PriorityDefinitionArray([
+			\DateTimeInterface::class => fn () => $expectedObj,
+		], Priority::High));
 
 		$defs = $chain->getDefinitions();
 		$this->assertCount(2, $defs);
