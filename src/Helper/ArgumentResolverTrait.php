@@ -30,7 +30,7 @@ trait ArgumentResolverTrait
 			throw new NotResolvedException(sprintf(
 				"Can't auto-wire complex types.\nArgument: \"%s\"\nType: \"%s\"\nClass: \"%s\"",
 				$param->getName(),
-				'complex', // todo get proper type.
+				$type?->__toString() ?? 'unknown-type',
 				$param->getDeclaringClass()?->name ?? 'unknown-class',
 			));
 		}
@@ -72,8 +72,8 @@ trait ArgumentResolverTrait
 		throw new NotResolvedException(sprintf(
 			'Can\'t resolve argument "$%s" of type "%s" in class "%s"',
 			$param->getName(),
-			$type?->getName() ?? 'unknown type',
-			$param->getDeclaringClass()?->name ?? 'unknown class',
+			$type?->__toString() ?? 'unknown-type',
+			$param->getDeclaringClass()?->name ?? 'unknown-class',
 		));
 	}
 }
