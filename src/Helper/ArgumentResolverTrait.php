@@ -27,7 +27,12 @@ trait ArgumentResolverTrait
 	{
 		$type = $param->getType();
 		if (!$type instanceof \ReflectionNamedType) {
-			throw new NotResolvedException('Can\'t auto-wire complex types');
+			throw new NotResolvedException(sprintf(
+				"Can't auto-wire complex types.\nArgument: \"%s\"\nType: \"%s\"\nClass: \"%s\"",
+				$param->getName(),
+				'complex', // todo get proper type.
+				$param->getDeclaringClass()?->name ?? 'unknown-class',
+			));
 		}
 
 		$typeName = $type->getName();
@@ -62,10 +67,13 @@ trait ArgumentResolverTrait
 		if ($param->isDefaultValueAvailable()) {
 			return $param->getDefaultValue();
 		}
+		/** @var null|\ReflectionNamedType $type */
+		$type = $param->getType();
 		throw new NotResolvedException(sprintf(
-			'Can\'t resolve argument "$%s" of type "%s"',
+			'Can\'t resolve argument "$%s" of type "%s" in class "%s"',
 			$param->getName(),
-			(string)$param->getType()?->__toString(),
+			$type?->getName() ?? 'unknown type',
+			$param->getDeclaringClass()?->name ?? 'unknown class',
 		));
 	}
 }
