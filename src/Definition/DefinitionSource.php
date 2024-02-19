@@ -8,7 +8,7 @@ interface DefinitionSource
 {
 	/**
 	 * @param string $name
-	 * @return null|callable(ContainerInterface, string): mixed
+	 * @return null|callable(ContainerInterface, class-string): mixed
 	 */
 	public function getDefinition(string $name): ?callable;
 

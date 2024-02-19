@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 class DefinitionArray implements DefinitionSource
 {
 	/**
-	 * @param array<string|class-string, callable(ContainerInterface, string): mixed> $definitions
+	 * @param array<string|class-string, callable(ContainerInterface, class-string): mixed> $definitions
 	 */
 	public function __construct(
 		private array $definitions,
@@ -18,7 +18,7 @@ class DefinitionArray implements DefinitionSource
 	}
 
 	/**
-	 * @return array<string|class-string, callable(ContainerInterface, string): mixed>
+	 * @return array<string|class-string, callable(ContainerInterface, class-string): mixed>
 	 */
 	public function getDefinitions(): array
 	{
@@ -26,7 +26,7 @@ class DefinitionArray implements DefinitionSource
 	}
 
 	/**
-	 * @param array<string|class-string, callable(ContainerInterface, string): mixed> $definitions
+	 * @param array<string|class-string, callable(ContainerInterface, class-string): mixed> $definitions
 	 */
 	public function addDefinitions(array $definitions): void
 	{

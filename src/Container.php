@@ -15,6 +15,11 @@ class Container implements ContainerInterface
 		private readonly DefinitionSource $definition,
 	) {}
 
+	/**
+	 * @template T
+	 * @param class-string<T> $id
+	 * @return T
+	 */
 	final public function get(string $id)
 	{
 		if (!$this->has($id)) {
