@@ -7,7 +7,6 @@ use Stefna\DependencyInjection\Definition\DefinitionFile;
 use Stefna\DependencyInjection\Definition\DefinitionSource;
 use Stefna\DependencyInjection\Definition\PriorityDefinitionChain;
 use Psr\Container\ContainerInterface;
-use Stefna\DependencyInjection\Helper\Autowire;
 
 final class ContainerBuilder
 {
@@ -44,7 +43,7 @@ final class ContainerBuilder
 	}
 
 	/**
-	 * @param DefinitionSource|string|array<string, Autowire|callable(ContainerInterface, string): mixed> $definition
+	 * @param DefinitionSource|string|array<string, callable(ContainerInterface, string): mixed> $definition
 	 */
 	public function addDefinition(
 		DefinitionSource|string|array $definition,

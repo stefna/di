@@ -3,12 +3,11 @@
 namespace Stefna\DependencyInjection\Definition;
 
 use Psr\Container\ContainerInterface;
-use Stefna\DependencyInjection\Helper\Autowire;
 
 class DefinitionArray implements DefinitionSource
 {
 	/**
-	 * @param array<string|class-string, Autowire|callable(ContainerInterface, string): mixed> $definitions
+	 * @param array<string|class-string, callable(ContainerInterface, string): mixed> $definitions
 	 */
 	public function __construct(
 		private array $definitions,
@@ -19,7 +18,7 @@ class DefinitionArray implements DefinitionSource
 	}
 
 	/**
-	 * @return array<string|class-string, Autowire|callable(ContainerInterface, string): mixed>
+	 * @return array<string|class-string, callable(ContainerInterface, string): mixed>
 	 */
 	public function getDefinitions(): array
 	{
@@ -42,7 +41,6 @@ class DefinitionArray implements DefinitionSource
 
 	public function getDefinition(string $name): ?callable
 	{
-		// @phpstan-ignore-next-line - Autowire is callable but PhpStan can't detect it
 		return $this->definitions[$name] ?? null;
 	}
 }
