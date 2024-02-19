@@ -4,5 +4,4 @@ namespace Stefna\DependencyInjection\Tests\Helper\Stubs\Namespace\Simple;
 
 final class Class1
 {
-
 }
