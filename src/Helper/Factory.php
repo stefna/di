@@ -53,4 +53,22 @@ final class Factory
 
 		return self::$cache[$hash];
 	}
+
+	/**
+	 * @param class-string $factory
+	 */
+	public static function autoWire(string $factory): callable
+	{
+		$hash = $factory;
+
+		self::$cache[$hash] ??= static function (ContainerInterface $container, string $className) use ($factory) {
+			$factoryInstance = (new Autowire())($container, $factory);
+			if (!is_callable($factoryInstance)) {
+				throw BadFactoryException::objectNotCallable();
+			}
+			return $factoryInstance($container, $className);
+		};
+
+		return self::$cache[$hash];
+	}
 }

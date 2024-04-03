@@ -9,6 +9,7 @@ use Stefna\DependencyInjection\Helper\Factory;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestBadFactory;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestFactory;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestFactoryWithClassName;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestFactoryWithDeps;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestInterface;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithoutArgs;
@@ -84,6 +85,19 @@ final class FactoryTest extends TestCase
 		$factory2 = Factory::simple(TestFactory::class);
 
 		$this->assertSame($factory1, $factory2);
+	}
+
+	public function testFactoryAutoWire(): void
+	{
+		$now = new \DateTimeImmutable();
+		$factory = Factory::autoWire(TestFactoryWithDeps::class);
+		$container = $this->container([
+			\DateTimeImmutable::class => fn () => $now,
+		]);
+
+		$instance = $factory($container, TestWithArgs::class);
+		$this->assertInstanceOf(TestWithArgs::class, $instance);
+		$this->assertSame($now, $instance->date);
 	}
 
 	/**
