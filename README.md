@@ -233,11 +233,58 @@ class ComplexFactory
 	}
 }
 
+class AutowiredComplexFactory
+{
+	public function __construct(
+		private ClockInterface $clock,
+	) {}
+
+	public function __invoke()
+	{
+		if ($className === B::class) {
+			return new Obj($this->clock);
+		}
+	}
+}
+
 $builder->addDefinition([
+	ObjFactory::class => fn () => new ObjFactory(),
 	Obj::class => Factory::simple(ObjFactory::class),
+	ObjFactory::class => fn () => new ComplexFactory(),
+	A::class => Factory::full(ComplexFactory::class),
+	B::class => Factory::autoWire(AutowiredComplexFactory::class),
+]);
+```
+
+#### Autowiring factories
+
+There are 2 ways to auto wire a factory
+
+Option 1 add it to the container like anything else
+```php
+use Stefna\DependencyInjection\Helper\Autowire;
+use Stefna\DependencyInjection\Helper\Factory;
+
+$builder->addDefinition([
+	ComplexFactory::class => Autowire::cls(),
+	// or 
+	ComplexFactory::class => fn () => new ComplexFactory(new Clock()),
+	
+	// looks up ComplexFactory from container and if it's not defined crashes
 	A::class => Factory::full(ComplexFactory::class),
 ]);
 ```
+
+Option 2 use the factory auto wire helper
+```php
+use Stefna\DependencyInjection\Helper\Autowire;
+use Stefna\DependencyInjection\Helper\Factory;
+
+$builder->addDefinition([
+	A::class => Factory::autoWire(ComplexFactory::class),
+]);
+```
+This is just a nice wrapper around option 1
 
 ## Contribute
 
