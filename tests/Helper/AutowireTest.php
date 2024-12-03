@@ -13,6 +13,7 @@ use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute1;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute2;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute3;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithAttribute4;
+use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithContainer;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithDefaultArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithNativeDefaultArgs;
 use Stefna\DependencyInjection\Tests\Helper\Stubs\TestWithoutArgs;
@@ -144,6 +145,17 @@ final class AutowireTest extends TestCase
 		$object = $autowire($this->container(), TestWithNativeDefaultArgs::class);
 		$this->assertInstanceOf(TestWithNativeDefaultArgs::class, $object);
 		$this->assertSame([], $object->memory);
+	}
+
+	public function testAutoWireContainer(): void
+	{
+		$autowire = Autowire::cls();
+
+		$container = $this->container();
+		$object = $autowire($container, TestWithContainer::class);
+
+		$this->assertInstanceOf(TestWithContainer::class, $object);
+		$this->assertSame($container, $object->container);
 	}
 
 	/**

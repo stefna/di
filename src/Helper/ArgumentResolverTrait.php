@@ -46,6 +46,10 @@ trait ArgumentResolverTrait
 			}
 		}
 
+		if (!$paramInstance && $typeName === ContainerInterface::class) {
+			$paramInstance = $container;
+		}
+
 		if (!$paramInstance && ($type->isBuiltin() || !$container->has($typeName))) {
 			return $this->resolveDefault($param);
 		}
