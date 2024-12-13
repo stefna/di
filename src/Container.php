@@ -6,14 +6,22 @@ use Stefna\DependencyInjection\Definition\DefinitionSource;
 use Stefna\DependencyInjection\Exception\NotFoundException;
 use Psr\Container\ContainerInterface;
 
-class Container implements ContainerInterface
+class Container implements ContainerInterface, DelegateContainerAware
 {
 	/** @var array<string, mixed> */
 	private array $cache = [];
+	private ContainerInterface $rootContainer;
 
 	public function __construct(
 		private readonly DefinitionSource $definition,
-	) {}
+	) {
+		$this->rootContainer = $this;
+	}
+
+	public function setRootContainer(ContainerInterface $container): void
+	{
+		$this->rootContainer = $container;
+	}
 
 	/**
 	 * @template T
@@ -27,7 +35,7 @@ class Container implements ContainerInterface
 		}
 		if (!isset($this->cache[$id])) {
 			$factory = $this->definition->getDefinition($id);
-			$this->cache[$id] = $factory ? $factory($this, $id) : null;
+			$this->cache[$id] = $factory ? $factory($this->rootContainer, $id) : null;
 		}
 		return $this->cache[$id];
 	}
