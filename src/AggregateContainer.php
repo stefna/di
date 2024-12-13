@@ -6,7 +6,7 @@ use Stefna\DependencyInjection\Exception\DuplicateEntryException;
 use Stefna\DependencyInjection\Exception\NotFoundException;
 use Psr\Container\ContainerInterface;
 
-final class AggregateContainer implements ContainerInterface
+final class AggregateContainer implements ContainerInterface, DelegateContainerAware
 {
 	/** @var ContainerInterface[][] */
 	private array $containers = [];
@@ -18,6 +18,12 @@ final class AggregateContainer implements ContainerInterface
 	private array $factoryCache = [];
 	/** @var float[] */
 	private array $priorities = [];
+	private ContainerInterface $rootContainer;
+
+	public function __construct()
+	{
+		$this->rootContainer = $this;
+	}
 
 	public function addContainer(
 		ContainerInterface $container,
@@ -36,6 +42,10 @@ final class AggregateContainer implements ContainerInterface
 
 		$this->priorities = array_keys($this->containers);
 		usort($this->priorities, static fn (float $a, float $b) => $b <=> $a);
+
+		if ($container instanceof DelegateContainerAware) {
+			$container->setRootContainer($this->rootContainer);
+		}
 	}
 
 	public function haveContainer(ContainerInterface $container): bool
@@ -82,5 +92,17 @@ final class AggregateContainer implements ContainerInterface
 			}
 		}
 		return false;
+	}
+
+	public function setRootContainer(ContainerInterface $container): void
+	{
+		$this->rootContainer = $container;
+		foreach ($this->priorities as $priority) {
+			foreach ($this->containers[$priority] as $container) {
+				if ($container instanceof DelegateContainerAware) {
+					$container->setRootContainer($this->rootContainer);
+				}
+			}
+		}
 	}
 }
