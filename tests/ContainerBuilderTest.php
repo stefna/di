@@ -3,6 +3,7 @@
 namespace Stefna\DependencyInjection\Tests;
 
 use Stefna\DependencyInjection\AggregateContainer;
+use Stefna\DependencyInjection\Attributes\NoCache;
 use Stefna\DependencyInjection\Container;
 use Stefna\DependencyInjection\ContainerBuilder;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
@@ -118,5 +119,43 @@ final class ContainerBuilderTest extends TestCase
 		$this->assertSame(7, $container->get('test2'));
 		$this->assertSame(4, $container->get('test3'));
 		$this->assertSame(12, $container->get('test4'));
+	}
+
+	public function testDefaultCacheService(): void
+	{
+		$builder = new ContainerBuilder();
+		$builder->addDefinition([
+			\DateTimeInterface::class => fn () => new \DateTimeImmutable(),
+		]);
+
+		$container = $builder->build();
+
+		$this->assertInstanceOf(Container::class, $container);
+
+		$this->assertTrue($container->has(\DateTimeInterface::class));
+
+		$this->assertSame(
+			$container->get(\DateTimeInterface::class),
+			$container->get(\DateTimeInterface::class)
+		);
+	}
+
+	public function testDisableServiceCache(): void
+	{
+		$builder = new ContainerBuilder();
+		$builder->addDefinition([
+			\DateTimeInterface::class => #[NoCache] fn () => new \DateTimeImmutable(),
+		]);
+
+		$container = $builder->build();
+
+		$this->assertInstanceOf(Container::class, $container);
+
+		$this->assertTrue($container->has(\DateTimeInterface::class));
+
+		$this->assertNotSame(
+			$container->get(\DateTimeInterface::class),
+			$container->get(\DateTimeInterface::class)
+		);
 	}
 }
