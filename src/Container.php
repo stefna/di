@@ -2,6 +2,7 @@
 
 namespace Stefna\DependencyInjection;
 
+use Stefna\DependencyInjection\Attributes\NoCache;
 use Stefna\DependencyInjection\Definition\DefinitionSource;
 use Stefna\DependencyInjection\Exception\NotFoundException;
 use Psr\Container\ContainerInterface;
@@ -35,6 +36,16 @@ class Container implements ContainerInterface, DelegateContainerAware
 		}
 		if (!isset($this->cache[$id])) {
 			$factory = $this->definition->getDefinition($id);
+			$reflection = null;
+			if ($factory instanceof \Closure) {
+				$reflection = new \ReflectionFunction($factory);
+			}
+			elseif (is_object($factory)) {
+				$reflection = new \ReflectionClass($factory);
+			}
+			if ($reflection?->getAttributes(NoCache::class) && $factory) {
+				return $factory($this->rootContainer, $id);
+			}
 			$this->cache[$id] = $factory ? $factory($this->rootContainer, $id) : null;
 		}
 		return $this->cache[$id];
