@@ -12,8 +12,6 @@ final class AggregateContainer implements ContainerInterface, DelegateContainerA
 	private array $containers = [];
 	/** @var string[] */
 	private array $ids = [];
-	/** @var array<string, mixed>  */
-	private array $cache = [];
 	/** @var array<string, callable>  */
 	private array $factoryCache = [];
 	/** @var float[] */
@@ -58,17 +56,13 @@ final class AggregateContainer implements ContainerInterface, DelegateContainerA
 	 */
 	public function get(string $id)
 	{
-		if (isset($this->cache[$id])) {
-			return $this->cache[$id];
-		}
-
 		if (!$this->has($id)) {
 			throw NotFoundException::withIdentifier($id);
 		}
 
 		$factory = $this->factoryCache[$id];
 		unset($this->factoryCache[$id]);
-		return $this->cache[$id] = $factory();
+		return $factory();
 	}
 
 	/**
@@ -76,9 +70,6 @@ final class AggregateContainer implements ContainerInterface, DelegateContainerA
 	 */
 	public function has(string $id): bool
 	{
-		if (isset($this->cache[$id])) {
-			return true;
-		}
 		if (isset($this->factoryCache[$id])) {
 			return true;
 		}
