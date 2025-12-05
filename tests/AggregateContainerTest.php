@@ -4,7 +4,9 @@ namespace Stefna\DependencyInjection\Tests;
 
 use Psr\Container\ContainerInterface;
 use Stefna\DependencyInjection\AggregateContainer;
+use Stefna\DependencyInjection\Attributes\NoCache;
 use Stefna\DependencyInjection\Container;
+use Stefna\DependencyInjection\ContainerBuilder;
 use Stefna\DependencyInjection\Definition\DefinitionArray;
 use Stefna\DependencyInjection\Exception\DuplicateEntryException;
 use PHPUnit\Framework\TestCase;
@@ -113,5 +115,56 @@ final class AggregateContainerTest extends TestCase
 
 		$entity = $rootAggregateContainer->get(TestWithArgs::class);
 		$this->assertSame($time, $entity->date);
+	}
+
+	public function testDefaultCacheService(): void
+	{
+		$time = new \DateTimeImmutable();
+		$rootAggregateContainer = new AggregateContainer('1');
+		$aggregateContainer1 = new AggregateContainer('2');
+		$aggregateContainer2 = new AggregateContainer('3');
+
+		$aggregateContainer1->addContainer(new Container(new DefinitionArray([
+			\DateTimeImmutable::class => fn () => $time,
+		])));
+		$aggregateContainer2->addContainer(new Container(new DefinitionArray([
+			TestWithArgs::class => function (ContainerInterface $c) use ($rootAggregateContainer) {
+				$this->assertSame($rootAggregateContainer, $c);
+				return new TestWithArgs($c->get(\DateTimeImmutable::class));
+			},
+		])));
+
+		$rootAggregateContainer->addContainer($aggregateContainer2);
+		$rootAggregateContainer->addContainer($aggregateContainer1);
+
+		$this->assertSame(
+			$rootAggregateContainer->get(\DateTimeImmutable::class),
+			$rootAggregateContainer->get(TestWithArgs::class)->date,
+		);
+	}
+
+	public function testDisableServiceCache(): void
+	{
+		$rootAggregateContainer = new AggregateContainer('1');
+		$aggregateContainer1 = new AggregateContainer('2');
+		$aggregateContainer2 = new AggregateContainer('3');
+
+		$aggregateContainer1->addContainer(new Container(new DefinitionArray([
+			\DateTimeImmutable::class => #[NoCache] fn () => new \DateTimeImmutable(),
+		])));
+		$aggregateContainer2->addContainer(new Container(new DefinitionArray([
+			TestWithArgs::class => function (ContainerInterface $c) use ($rootAggregateContainer) {
+				$this->assertSame($rootAggregateContainer, $c);
+				return new TestWithArgs($c->get(\DateTimeImmutable::class));
+			},
+		])));
+
+		$rootAggregateContainer->addContainer($aggregateContainer2);
+		$rootAggregateContainer->addContainer($aggregateContainer1);
+
+		$this->assertNotSame(
+			$rootAggregateContainer->get(\DateTimeImmutable::class),
+			$rootAggregateContainer->get(TestWithArgs::class)->date,
+		);
 	}
 }
